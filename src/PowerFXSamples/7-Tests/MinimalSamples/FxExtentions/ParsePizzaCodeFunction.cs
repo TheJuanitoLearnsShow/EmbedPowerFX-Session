@@ -8,6 +8,7 @@ public class ParsePizzaCodeFunction : ReflectionFunction
 {
     public ParsePizzaCodeFunction()
         : base("ParsePizzaCode", FormulaType.UntypedObject ,[ FormulaType.String ])
+    // FormulaType.Deferred is not supported by the PowerFX interpreter
     {
     }
 

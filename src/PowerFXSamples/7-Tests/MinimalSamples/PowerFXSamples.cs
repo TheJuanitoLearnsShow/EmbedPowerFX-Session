@@ -40,11 +40,14 @@ public class PowerFXSamples
         var engine = new RecalcEngine(engineConfig);
         
         engine.UpdateVariable("MyPizzaCode", "20020104-JOY-777");
+        engine.SetFormula("MyOtherCustomer","{ Name: \"Peter\", CustomerId: 2, StartDate: DateValue(\"2021-10-05\")  }", OnFormulaUpdate);
         engine.SetFormula("PizzaCustomer","ParsePizzaCode(MyPizzaCode)", OnFormulaUpdate);
-        engine.SetFormula("PizzaCustomerStartDate","ParsePizzaCode(MyPizzaCode).StartDate", OnFormulaUpdate);
+        // engine.SetFormula("PizzaCustomerStartDate","Day(PizzaCustomer.StartDate)", OnFormulaUpdate);
+        engine.SetFormula("PizzaCustomerStartDate","Day(MyOtherCustomer.StartDate)", OnFormulaUpdate);
         
         var resultPizzaCustomer = engine.Eval("PizzaCustomer");
-        var resultStartDate = engine.Eval("PizzaCustomerStartDate");
+        // var resultStartDate = engine.Eval("PizzaCustomerStartDate"); //The value could not be interpreted as a color.
+        var resultStartDay = engine.Eval("Day(PizzaCustomer.StartDate)"); //The value could not be interpreted as a color.
         
         
         var propertiesDict = (IDictionary<string, object>)resultPizzaCustomer.ToObject();
@@ -52,9 +55,9 @@ public class PowerFXSamples
         _testOutputHelper.WriteLine(propertiesDict["CustomerName"].ToString());
         _testOutputHelper.WriteLine(propertiesDict["CustomerId"].ToString());
         
-        _testOutputHelper.WriteLine(resultStartDate.ToObject().ToString());
+        _testOutputHelper.WriteLine(resultStartDay.ToObject().ToString());
 
-        if (resultStartDate is ErrorValue errorValue)
+        if (resultStartDay is ErrorValue errorValue)
         {
             var errorMessages = string.Join(" | ", errorValue.Errors.Select(e => e.Message));
             _testOutputHelper.WriteLine($"Error: {errorMessages}");
