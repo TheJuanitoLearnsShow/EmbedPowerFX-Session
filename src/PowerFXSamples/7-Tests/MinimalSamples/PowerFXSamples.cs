@@ -15,7 +15,7 @@ public class PowerFXSamples
     }
 
     [Fact]
-    public void PrimitiveCustomFunctionTest()
+    public void CustomFunction_Primitive_Test()
     {
         var engineConfig = new PowerFxConfig();
         engineConfig.AddFunction(new AddBusinessDaysFunction());
@@ -31,6 +31,40 @@ public class PowerFXSamples
         _testOutputHelper.WriteLine(result.ToObject().ToString());
     }
 
+    [Fact]
+    public void CustomFunction_Record_Test()
+    {
+        var engineConfig = new PowerFxConfig();
+        engineConfig.AddFunction(new ParsePizzaCodeFunction());
+        
+        var engine = new RecalcEngine(engineConfig);
+        
+        engine.UpdateVariable("MyPizzaCode", "20020104-JOY-777");
+        engine.SetFormula("PizzaCustomer","ParsePizzaCode(MyPizzaCode)", OnFormulaUpdate);
+        engine.SetFormula("PizzaCustomerStartDate","ParsePizzaCode(MyPizzaCode).StartDate", OnFormulaUpdate);
+        
+        var resultPizzaCustomer = engine.Eval("PizzaCustomer");
+        var resultStartDate = engine.Eval("PizzaCustomerStartDate");
+        
+        
+        var propertiesDict = (IDictionary<string, object>)resultPizzaCustomer.ToObject();
+        _testOutputHelper.WriteLine(propertiesDict["StartDate"].ToString());
+        _testOutputHelper.WriteLine(propertiesDict["CustomerName"].ToString());
+        _testOutputHelper.WriteLine(propertiesDict["CustomerId"].ToString());
+        
+        _testOutputHelper.WriteLine(resultStartDate.ToObject().ToString());
+
+        if (resultStartDate is ErrorValue errorValue)
+        {
+            var errorMessages = string.Join(" | ", errorValue.Errors.Select(e => e.Message));
+            _testOutputHelper.WriteLine($"Error: {errorMessages}");
+            // Assert.IsNotType<ErrorValue>(resultStartDate);
+        }
+        // _testOutputHelper.WriteLine(resultPizzaCustomer.ToObject()..StartDate);
+        // _testOutputHelper.WriteLine(resultStartDate.ToObject().ToString());
+        // _testOutputHelper.WriteLine(resultCustomerName.ToObject().ToString());
+        // _testOutputHelper.WriteLine(resultCustomerId.ToObject().ToString());
+    }
     private void OnFormulaUpdate(string arg1, FormulaValue arg2)
     {
     }
