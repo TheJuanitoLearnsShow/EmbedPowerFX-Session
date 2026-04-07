@@ -29,9 +29,9 @@ public class PowerFXSamples
         engine.SetFormula("IsEmail", 
             """
             If(
-                IsMatch(
+                Contains(
                     EmailTxt,
-                   "^[0-9]$"
+                   "@"
                 ),
                 true,
                 false
@@ -47,7 +47,7 @@ public class PowerFXSamples
         engine.SetFormula("Mass", "2", OnFormulaUpdate);
         engine.SetFormula("KineticEnergy", "(1/2) * Mass * Velocity * Velocity", OnFormulaUpdate);
         var energyResult = engine.GetValue("KineticEnergy");
-        _testOutputHelper.WriteLine($"KineticEnergy: {ValueFormatter.ToDisplayOutput(greetingResult)}");
+        _testOutputHelper.WriteLine($"KineticEnergy: {ValueFormatter.ToDisplayOutput(energyResult)}");
     }
     [Fact]
     public void CustomFunction_Primitive_Test()
@@ -115,6 +115,22 @@ public class PowerFXSamples
         
         _testOutputHelper.WriteLine(ValueFormatter.ToDisplayOutput(resultTotalCost));
         _testOutputHelper.WriteLine(ValueFormatter.ToDisplayOutput(resultTable));
+    }
+    
+    [Fact]
+    public async Task CustomFunction_Async_Test()
+    {
+        var engineConfig = new PowerFxConfig();
+        engineConfig.AddFunction(new AsyncProductTagLineSearch());
+        
+        var engine = new RecalcEngine(engineConfig);
+        
+        engine.UpdateVariable("PizzaSelection", "Ham");
+        engine.SetFormula("TagLine","GetProductTagLine(PizzaSelection)", OnFormulaUpdate);
+        
+        var resultTagLine = await engine.EvalAsync("TagLine", CancellationToken.None);
+        
+        _testOutputHelper.WriteLine(ValueFormatter.ToDisplayOutput(resultTagLine));
     }
     private void OnFormulaUpdate(string arg1, FormulaValue arg2)
     {
