@@ -5,7 +5,7 @@ namespace MinimalSamples.FxExtentions;
 
 public class FileLinesFunction : ReflectionFunction
 {
-    // neeed for the syntax checker to know the result type is a table with a column "Price" of type Decimal
+    // need for the syntax checker to know the result type is a table with a column "Price" of type Decimal
     private static TableType _tableType = TableType.Empty().Add(new NamedFormulaType("Price", FormulaType.Decimal));
     public FileLinesFunction()
         : base("FileLines", _tableType, [ FormulaType.String ])

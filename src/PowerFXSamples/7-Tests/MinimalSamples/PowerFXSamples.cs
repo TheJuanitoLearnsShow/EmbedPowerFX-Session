@@ -68,6 +68,25 @@ public class PowerFXSamples
         // _testOutputHelper.WriteLine(resultCustomerName.ToObject().ToString());
         // _testOutputHelper.WriteLine(resultCustomerId.ToObject().ToString());
     }
+    
+    [Fact]
+    public void CustomFunction_Table_Test()
+    {
+        var engineConfig = new PowerFxConfig();
+        engineConfig.AddFunction(new IngredientsTableFunction());
+        
+        var engine = new RecalcEngine(engineConfig);
+        
+        engine.UpdateVariable("PizzaSelection", "usual-h");
+        engine.SetFormula("PizzaIngredients","GetIngredients(PizzaSelection)", OnFormulaUpdate);
+        engine.SetFormula("TotalCost","Sum(PizzaIngredients As r, r.Cost )", OnFormulaUpdate);
+        
+        var resultTable = engine.Eval("PizzaIngredients");
+        var resultTotalCost = engine.Eval("TotalCost");
+        
+        _testOutputHelper.WriteLine(ValueFormatter.ToDisplayOutput(resultTotalCost));
+        _testOutputHelper.WriteLine(ValueFormatter.ToDisplayOutput(resultTable));
+    }
     private void OnFormulaUpdate(string arg1, FormulaValue arg2)
     {
     }
