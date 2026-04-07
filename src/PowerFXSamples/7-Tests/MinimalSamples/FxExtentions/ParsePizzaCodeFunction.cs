@@ -24,7 +24,7 @@ public class ParsePizzaCodeFunction : ReflectionFunction
         var customerId = int.Parse(codeParts[2]);
         
         // From .NET to PowerFX type 
-        var record = FormulaValue.NewRecordFromFields(
+        RecordValue? record = FormulaValue.NewRecordFromFields(
             new NamedValue("StartDate", FormulaValue.New(startDt)),
             new NamedValue("CustomerName",  FormulaValue.New(customerName)),
             new NamedValue("CustomerId",  FormulaValue.New(customerId))
