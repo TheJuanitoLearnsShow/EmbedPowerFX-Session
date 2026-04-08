@@ -29,9 +29,9 @@ public class PowerFXSamples
         engine.SetFormula("IsEmail", 
             """
             If(
-                Contains(
-                    EmailTxt,
-                   "@"
+                Find(
+                   "@",
+                   EmailTxt
                 ),
                 true,
                 false
