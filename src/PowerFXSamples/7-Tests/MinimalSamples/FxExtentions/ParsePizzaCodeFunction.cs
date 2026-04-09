@@ -6,8 +6,13 @@ namespace MinimalSamples.FxExtentions;
 
 public class ParsePizzaCodeFunction : ReflectionFunction
 {
+    private static readonly RecordType RecordType = RecordType.Empty()
+            .Add(new NamedFormulaType("StartDate", FormulaType.DateTime))
+            .Add(new NamedFormulaType("CustomerName", FormulaType.String))
+            .Add(new NamedFormulaType("CustomerId", FormulaType.Number))
+        ;
     public ParsePizzaCodeFunction()
-        : base("ParsePizzaCode", FormulaType.UntypedObject ,[ FormulaType.String ])
+        : base("ParsePizzaCode", RecordType ,[ FormulaType.String ])
     // FormulaType.Deferred is not supported by the PowerFX interpreter
     {
     }
@@ -15,7 +20,7 @@ public class ParsePizzaCodeFunction : ReflectionFunction
     public FormulaValue Execute(StringValue pizzaCode)
     {
         // From PowerFX to .NET type 
-        var pizzaCodeStr = pizzaCode.Value;
+        string? pizzaCodeStr = pizzaCode.Value;
         
         // regular .NET logic
         var codeParts = pizzaCodeStr.Split("-");
