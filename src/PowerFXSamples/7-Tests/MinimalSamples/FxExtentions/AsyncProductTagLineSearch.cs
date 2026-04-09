@@ -18,12 +18,16 @@ public class AsyncProductTagLineSearch : ReflectionFunction
     /// <returns></returns>
     public async Task<FormulaValue> Execute(StringValue productToSearch, CancellationToken cancellationToken)
     {
-        var productToSearchStr = productToSearch.Value;
+        // From PowerFX world to .NET
+        string productToSearchStr = productToSearch.Value;
+
+        // Async .net logic
         await foreach (var line in FileSearch.FindLinesContainingAsync("data/data.txt", productToSearchStr)
                            .WithCancellation(cancellationToken))
         {
             return FormulaValue.New(line);
         }
+        
         return FormulaValue.New(string.Empty);
     }
 }

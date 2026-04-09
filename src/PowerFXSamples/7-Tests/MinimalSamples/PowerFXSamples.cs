@@ -18,12 +18,14 @@ public class PowerFXSamples
     public void Starter_Test()
     {
         var engine = new RecalcEngine();
-// notice the escaped quotes as we are passing a PowerFX string literal. Our second parameter needs to be 
-//  a valid PowerFX expression.
-        engine.SetFormula("MyName", "\"Juanito\"", OnFormulaUpdate); 
-    
+        // notice the escaped quotes as we are passing a PowerFX string literal. Our second parameter needs to be 
+        //  a valid PowerFX expression.
+        engine.UpdateVariable("SampleVar", 2);
+        engine.SetFormula("MyName", "\"Juanito\"", OnFormulaUpdate);
+
+        engine.UpdateVariable("SampleVar", 5);
         // engine.SetFormula("MyName", "\"Juanito\"", OnFormulaUpdate); // throws error because MyName is already defined (System.InvalidOperationException: MyName is already defined)
-   
+
         engine.SetFormula("Greeting", "\"Hello, \" & MyName & \"!\"", OnFormulaUpdate);
         engine.SetFormula("EmailTxt", "\"jj@gamil.com\"", OnFormulaUpdate); 
         engine.SetFormula("IsEmail", 
@@ -36,9 +38,9 @@ public class PowerFXSamples
                 true,
                 false
             )
-            """, OnFormulaUpdate); 
-        var greetingResult = engine.Eval("Greeting");
-        var isEmailResult = engine.Eval("IsEmail");
+            """, OnFormulaUpdate);
+        FormulaValue greetingResult = engine.Eval("Greeting");
+        FormulaValue isEmailResult = engine.Eval("IsEmail");
         _testOutputHelper.WriteLine(greetingResult.ToObject().ToString());
         _testOutputHelper.WriteLine(isEmailResult.ToObject().ToString());
     
@@ -109,9 +111,9 @@ public class PowerFXSamples
         engine.UpdateVariable("PizzaSelection", "usual-h");
         engine.SetFormula("PizzaIngredients","GetIngredients(PizzaSelection)", OnFormulaUpdate);
         engine.SetFormula("TotalCost","Sum(PizzaIngredients As r, r.Cost )", OnFormulaUpdate);
-        
-        var resultTable = engine.Eval("PizzaIngredients");
+
         var resultTotalCost = engine.Eval("TotalCost");
+        var resultTable = engine.Eval("PizzaIngredients");
         
         _testOutputHelper.WriteLine(ValueFormatter.ToDisplayOutput(resultTotalCost));
         _testOutputHelper.WriteLine(ValueFormatter.ToDisplayOutput(resultTable));
@@ -127,8 +129,8 @@ public class PowerFXSamples
         
         engine.UpdateVariable("PizzaSelection", "Ham");
         engine.SetFormula("TagLine","GetProductTagLine(PizzaSelection)", OnFormulaUpdate);
-        
-        var resultTagLine = await engine.EvalAsync("TagLine", CancellationToken.None);
+
+        FormulaValue resultTagLine = await engine.EvalAsync("TagLine", CancellationToken.None);
         
         _testOutputHelper.WriteLine(ValueFormatter.ToDisplayOutput(resultTagLine));
     }

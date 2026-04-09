@@ -20,7 +20,7 @@ public class IngredientsTableFunction : ReflectionFunction
     public FormulaValue Execute(StringValue recipeName)
     {
         // From PowerFX to .NET type 
-        var recipeNameStr = recipeName.Value;
+        string recipeNameStr = recipeName.Value;
         
         // From .NET to PowerFX type 
         List<RecordValue> rows = recipeNameStr.ToLowerInvariant() switch

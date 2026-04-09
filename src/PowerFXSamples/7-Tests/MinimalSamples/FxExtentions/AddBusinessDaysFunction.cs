@@ -18,9 +18,9 @@ public class AddBusinessDaysFunction : ReflectionFunction
         // get value from powerfx to .net
         var input = fromDate.GetConvertedValue(TimeZoneInfo.Local);
         var numDaysToAdd = Convert.ToInt32(days.Value);
-        
+
         // .net logic
-        var result = _holidaysEngine.BusinessDaysAdd(input, numDaysToAdd); 
+        DateTime result = _holidaysEngine.BusinessDaysAdd(input, numDaysToAdd); 
         
         // return value to powerfx
         return FormulaValue.New(result);

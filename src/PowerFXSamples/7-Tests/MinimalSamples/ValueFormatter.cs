@@ -11,7 +11,7 @@ public class ValueFormatter
             TableType tableType => DisplayTable(result as TableValue),
             // Runtime tableType => DisplayTable(result as TableValue),
             RecordType recordType => DisplayRecord(result as RecordValue),
-            // NumberType recordType => DisplayRecord(result as RecordValue),
+            //NumberType n => (result as NumberValue).Value
             _ => result?.ToObject().ToString() ?? string.Empty
         };
     }
