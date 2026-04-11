@@ -1,0 +1,4 @@
+﻿1. open browser tabs
+2. Open powerPoint
+3. Run all tests to show results before hand
+4. Open zoom it

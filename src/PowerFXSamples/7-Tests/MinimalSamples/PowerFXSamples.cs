@@ -2,6 +2,7 @@
 using Microsoft.PowerFx.Types;
 using MinimalSamples.FxExtentions;
 using Xunit.Abstractions;
+using Xunit.Sdk;
 
 namespace MinimalSamples;
 
@@ -18,14 +19,16 @@ public class PowerFXSamples
     public void Starter_Test()
     {
         var engine = new RecalcEngine();
-// notice the escaped quotes as we are passing a PowerFX string literal. Our second parameter needs to be 
-//  a valid PowerFX expression.
+
+        engine.UpdateVariable("EmailTxt", "jj@gamil.com");
+
+        // notice the escaped quotes as we are passing a PowerFX string literal. Our second parameter needs to be 
+        //  a valid PowerFX expression.
         engine.SetFormula("MyName", "\"Juanito\"", OnFormulaUpdate); 
     
         // engine.SetFormula("MyName", "\"Juanito\"", OnFormulaUpdate); // throws error because MyName is already defined (System.InvalidOperationException: MyName is already defined)
    
         engine.SetFormula("Greeting", "\"Hello, \" & MyName & \"!\"", OnFormulaUpdate);
-        engine.SetFormula("EmailTxt", "\"jj@gamil.com\"", OnFormulaUpdate); 
         engine.SetFormula("IsEmail", 
             """
             If(
@@ -37,11 +40,17 @@ public class PowerFXSamples
                 false
             )
             """, OnFormulaUpdate); 
+
         var greetingResult = engine.Eval("Greeting");
         var isEmailResult = engine.Eval("IsEmail");
-        _testOutputHelper.WriteLine(greetingResult.ToObject().ToString());
-        _testOutputHelper.WriteLine(isEmailResult.ToObject().ToString());
-    
+        _testOutputHelper.WriteLine("greetingResult: " + ValueFormatter.ToDisplayOutput(greetingResult));
+        _testOutputHelper.WriteLine("isEmailResult: " + ValueFormatter.ToDisplayOutput(isEmailResult));
+
+        _testOutputHelper.WriteLine("Updating EmailTxt to a non-email value...");
+        engine.UpdateVariable("EmailTxt", "bad-EMAIL");
+        var isEmailResult2 = engine.Eval("IsEmail");
+        _testOutputHelper.WriteLine("isEmailResult: " + ValueFormatter.ToDisplayOutput(isEmailResult2));
+
         // 2nd Example
         engine.UpdateVariable("Velocity", 20);
         engine.SetFormula("Mass", "2", OnFormulaUpdate);
@@ -141,7 +150,11 @@ public class PowerFXSamples
         _testOutputHelper.WriteLine("TagLine:");
         _testOutputHelper.WriteLine(ValueFormatter.ToDisplayOutput(resultTagLine));
     }
-    private void OnFormulaUpdate(string arg1, FormulaValue arg2)
+
+    // You can capture the value here too if you want to
+    private void OnFormulaUpdate(string formulaName, FormulaValue newPowerFxValue)
     {
+        var newValue = ValueFormatter.ToDisplayOutput(newPowerFxValue);
+        _testOutputHelper.WriteLine($"OnFormulaUpdate {formulaName}: {newValue}");
     }
 }
