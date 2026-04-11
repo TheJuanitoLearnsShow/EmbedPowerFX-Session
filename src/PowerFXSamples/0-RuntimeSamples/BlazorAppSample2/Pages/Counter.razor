@@ -1,0 +1,19 @@
+﻿@page "/counter"
+
+<PageTitle>PowerFX Execution</PageTitle>
+
+<h1>PowerFX Execution</h1>
+
+<p role="status">PowerFX result: @currentCount</p>
+
+<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+
+@code {
+    private int currentCount = 0;
+
+    private void IncrementCount()
+    {
+		var result = SamplePowerFx.GetTestValue();
+        currentCount = (int) result;
+    }
+}

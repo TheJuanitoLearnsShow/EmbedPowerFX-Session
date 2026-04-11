@@ -1,3 +1,6 @@
 <Solution>
+  <Folder Name="/0-RuntimeSamples/">
+    <Project Path="0-RuntimeSamples/BlazorAppSample2/BlazorAppSample2.csproj" Id="4ee6a0db-3a95-4d32-a890-0ac7740da5a9" />
+  </Folder>
   <Project Path="7-Tests/MinimalSamples/MinimalSamples.csproj" />
 </Solution>
